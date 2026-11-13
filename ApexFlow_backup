@@ -1,9 +1,9 @@
 # Shadowrocket 配置 · ApexFlow v7 · 2026-10-26 00:00 SGT
-# 适用环境：iPhone（中国大陆运营商）+ 自建 Tailscale（ts.net / 100.64.0.0/10）+ 家庭 LAN 192.168.10.0/24
+# 适用环境：iOS Shadowrocket + Tailscale/局域网环境（细节略）
 # 编写依据：https://lowertop.github.io/Shadowrocket/ （Shadowrocket 使用手册）与 lazy_group.conf
 # v6 -> v7 改动：
 #   1. 地区判定暂时回退到你此前验证过的 v3 写法：[❶❷❸]xx.区 + select=0 + use=*
-#   2. 其余保持 v6：DoH/hijack-dns/UDP REJECT/ts.net 系统 DNS
+#   2. 其余保持 v6：DoH/hijack-dns/UDP REJECT/Tailscale MagicDNS 系统 DNS
 #   3. ApexFlow_backup 固定为 v3（你之前能用的配置）；正式更新只走 ApexFlow.conf
 
 [General]
@@ -14,7 +14,7 @@ fallback-dns-server = https://doh.360.cn/dns-query,https://dns.alidns.com/dns-qu
 # 直连域名也走加密 DNS（不再交给运营商明文 DNS）
 dns-direct-system = false
 dns-direct-fallback-proxy = true
-# 允许私有 IP 应答：Tailscale 100.64/10 与家庭 LAN 依赖私有地址；公共域名仍走可信 DoH，重绑定风险可控
+# 允许私有 IP 应答：私有网段依赖私有地址应答；公共域名仍走可信 DoH，重绑定风险可控
 private-ip-answer = true
 # 接管 App 硬编码的公共 DNS，所有明文 DNS 都交给 SR 处理
 hijack-dns = 8.8.8.8,8.8.4.4,1.1.1.1,1.0.0.1,9.9.9.9,149.112.112.112,208.67.222.222,208.67.220.220,223.5.5.5,119.29.29.29,114.114.114.114
@@ -68,7 +68,7 @@ TIKTOK = select,US,Auto,JP,SG,policy-select-name=US
 Final = select,Auto,DIRECT,policy-select-name=Auto
 
 [Rule]
-# ---------- 0. 本机 / Tailscale / 家庭局域网：最高优先级直连 ----------
+# ---------- 0. 本机 / 私有网段：最高优先级直连 ----------
 DOMAIN-SUFFIX,ts.net,DIRECT
 DOMAIN-SUFFIX,local,DIRECT
 DOMAIN-SUFFIX,lan,DIRECT
